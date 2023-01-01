@@ -1,2 +1,3 @@
 # Yelp-Review-Analysis
-Sentiment analysis on yelp reviews using pytorch.
+
+<img src = "artifacts/medicinal leaf.gif"> <br>
