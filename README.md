@@ -1,3 +1,3 @@
 # Yelp-Review-Analysis
 
-<img src = "artifacts/medicinal leaf.gif"> <br>
+<img src = "artifacts/streamlit.png"> <br>
