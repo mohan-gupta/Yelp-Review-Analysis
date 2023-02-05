@@ -14,5 +14,5 @@ DROP = 0.1
 LR = 1e-3
 DECAY = 0.01
 EPOCHS = 20
-CHECKPOINT_PATH = "model/checkpoint.pt"
-VOCAB_PATH = "model/vocab.pkl"
+CHECKPOINT_PATH = "../model/checkpoint.pt"
+VOCAB_PATH = "../model/vocab.pkl"

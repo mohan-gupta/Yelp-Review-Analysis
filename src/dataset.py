@@ -4,6 +4,8 @@ from torchtext.vocab import build_vocab_from_iterator
 
 from sklearn.model_selection import train_test_split
 
+from utils import load_vocab
+
 import config
 
 class Dataset:
@@ -44,20 +46,23 @@ def yield_tokens(data_iter):
     for text, _ in data_iter:
         yield text
 
-def get_loaders(data):
+def get_loaders(data, load=False):
     train_set, val_set = train_test_split(data, test_size=0.25, shuffle=True,
                                         stratify=data['sentiment'], random_state=42)
 
     train_set = train_set.values
     val_set = val_set.values
 
-    train_iter = iter(data.values)
+    if load==False:
+        train_iter = iter(train_set)
 
-    vocab = build_vocab_from_iterator(yield_tokens(train_iter), min_freq=config.MIN_COUNT,
-                                  specials=["<unk>", "<pad>"])
+        vocab = build_vocab_from_iterator(yield_tokens(train_iter), min_freq=config.MIN_COUNT,
+                                    specials=["<unk>", "<pad>"])
 
-    #This index will be returned when OOV token is queried.
-    vocab.set_default_index(vocab["<unk>"])
+        #This index will be returned when OOV token is queried.
+        vocab.set_default_index(vocab["<unk>"])
+    else:
+        vocab = load_vocab()
 
     text_pipeline = lambda x: vocab(x)
     label_pipeline = lambda x: int(x)

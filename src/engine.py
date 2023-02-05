@@ -14,14 +14,14 @@ def train_one_batch(model, data, loss_fn, optimizer):
     
     y = data['y'].unsqueeze(1)
 
-    probs = model(data['X'], data['X_len'])
+    logits = model(data['X'], data['X_len'])
     
     with torch.no_grad():
-        pred = probs.detach().cpu().sigmoid()
+        pred = logits.detach().cpu().sigmoid()
         pred = pred.numpy()>0.5
         acc = (pred==y.detach().cpu().numpy()).sum()/len(pred)
 
-    loss = loss_fn(probs, y)
+    loss = loss_fn(logits, y)
     
     loss.backward()
     optimizer.step()
@@ -37,7 +37,7 @@ def train_loop(model, data_loader, loss_fn, optimizer):
     loop = tqdm(data_loader)
     
     for data in loop:
-        batch_loss, batch_score = train_one_batch(model, data, loss_fn, optimizer)
+        batch_loss, batch_score, batch_logits = train_one_batch(model, data, loss_fn, optimizer)
         
         with torch.no_grad():
             total_loss += batch_loss.item()
@@ -59,13 +59,13 @@ def validate_one_batch(model, data, loss_fn):
     
     y = data['y'].unsqueeze(1)
     
-    probs = model(data['X'], data['X_len'])
+    logits = model(data['X'], data['X_len'])
 
-    pred = probs.detach().cpu().sigmoid()
+    pred = logits.detach().cpu().sigmoid()
     pred = pred.numpy()>0.5
     acc = (pred==y.detach().cpu().numpy()).sum()/len(pred)
     
-    loss = loss_fn(probs, y)
+    loss = loss_fn(logits, y)
     
     return loss, acc
 
@@ -80,7 +80,7 @@ def validate_loop(model, data_loader, loss_fn):
     
     with torch.no_grad():
         for data in loop:
-                loss, acc = validate_one_batch(model, data, loss_fn)
+                loss, acc, batch_logits = validate_one_batch(model, data, loss_fn)
 
                 total_loss += loss.item()
                 total_score += acc

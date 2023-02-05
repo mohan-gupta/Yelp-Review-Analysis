@@ -15,7 +15,7 @@ def main(save=False, load=False):
 
     data = get_processed_data()
 
-    train_loader, val_loader, vocab = get_loaders(data)
+    train_loader, val_loader, vocab = get_loaders(data, load=load)
 
     net = Model(len(vocab), config.INPUT_SIZE, config.HIDDEN_SIZE,
                  config.OUTPUT_SIZE, config.DROP, config.NUM_LAYERS)

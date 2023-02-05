@@ -58,7 +58,7 @@ if __name__=="__main__":
     corpus = X.to_dict()
     tok_corpus = np.empty(len(corpus), dtype='object')
 
-    with mp.Pool() as pool:
+    with mp.Pool(mp.cpu_count()-1) as pool:
         for idx,txt in tqdm(pool.imap_unordered(tokenizer, corpus.items()), total=len(corpus)):
             #res = (idx, sntnc)
             tok_corpus[idx] = txt
@@ -70,13 +70,11 @@ if __name__=="__main__":
     df = pd.DataFrame({'text': tok_corpus, 'sentiment': y})
 
     df['text'] = df['text'].apply(lambda x: ' '.join(x))
-
-    df['sentiment'] = df['sentiment']
     
     df = df.sample(frac=1)
 
-    #dropping null values
-    df = df.dropna()
+    #dropping row with empty strings
+    df = df[df['text'].astype(bool)]
     
     #Saving processed data
     df.to_csv('../dataset/processed_data.csv', index=False)
