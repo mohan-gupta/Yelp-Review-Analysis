@@ -36,7 +36,7 @@ if __name__ == "__main__":
             else:
                 pred = response[1]
                 sentiment= 'Negatvie'
-                if pred>0.5:
+                if pred>0.5135079787994925:
                     sentiment = 'Positive'
 
                 result = f'<p style="font-family:sans-serif; color:White; font-size: 16px;">\
