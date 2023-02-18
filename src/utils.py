@@ -2,6 +2,9 @@ import pandas as pd
 import pickle
 import torch
 import src.config as config
+import os
+
+CWD = os.path.dirname(__file__)
 
 def get_data():
     df = pd.read_csv("../dataset/data.csv")
@@ -26,8 +29,10 @@ def load_model(model, optimizer=None, map_location="cuda"):
     loc = torch.device("cuda")
     if map_location == "cpu":
         loc = torch.device("cpu")
+    
+    path = os.path.join(CWD, config.CHECKPOINT_PATH)
 
-    checkpoint = torch.load(config.CHECKPOINT_PATH, map_location = loc)
+    checkpoint = torch.load(path, map_location = loc)
 
     model.load_state_dict(checkpoint['model'])
 
@@ -38,7 +43,9 @@ def load_model(model, optimizer=None, map_location="cuda"):
     return model
 
 def load_vocab():
-    with open(config.VOCAB_PATH , 'rb') as f:
+    path = os.path.join(CWD, config.VOCAB_PATH)
+    
+    with open(path , 'rb') as f:
         vocab = pickle.load(f)
     
     return vocab['vocab']
